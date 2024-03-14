@@ -5,6 +5,10 @@ import numpy as np
 import yfinance as yf
 
 
+from datetime import datetime
+from the_ohe_stock.crypto_data.timeframes import timeFrameCrypto
+
+
 def bist_kap(verify = True, to_excel=False):
     main_url = "https://www.kap.org.tr/tr/Endeksler"
     url_main = requests.get(main_url, verify=verify)
@@ -52,3 +56,33 @@ def yf_data_download(tag, frame, progress=False):
         "Adj Close": "adj_close"
         })
     return result
+
+def crypto_format(result):
+    res = result.copy()
+    try:
+        if res["s"] == "ok":
+            res.pop("s")
+            df = pd.DataFrame.from_dict(res)
+            df["t"] = df["t"].apply(datetime.fromtimestamp)
+            df = df.rename(columns = {"t":"date","h":"high","o":"open","l":"low","c":"close","v":"volume"})
+            df = df.set_index("date")
+            return df
+        
+        else:
+            print(res["s"])
+            return None
+    except Exception as e:
+        print(e)
+        return None
+
+def crypto_data_download(tag, frame):
+    from_, to_, resolution = frame
+    base = "https://graph-api.btcturk.com"
+    method = "/v1/klines/history?from={}&resolution={}&symbol={}&to={}".format(
+        from_, resolution, tag, to_ 
+    )
+    url = base+method
+    result = requests.get(url=url)
+    result = result.json()
+    formatted_result = crypto_format(result)
+    return formatted_result

@@ -21,12 +21,12 @@ class ExcelWriter():
         self.title_font = Font(
             name='Calibri',
             color='FFFFFFFF',
-            size=12,
+            size=10,
             bold=True,
             italic=False)
         self.font = Font(
             name='Calibri',
-            size=11,
+            size=10,
             bold=False,
             italic=False)
 
@@ -93,7 +93,7 @@ class ExcelWriter():
                     pass
             
     def adjust_columns(self, width_exp = 1.4):
-        for k in [i for i in dir(ex) if i[:2] == "ws"]:
+        for k in [i for i in dir(self) if i[:2] == "ws"]:
             ws = getattr(self, k)
             dim_holder = DimensionHolder(worksheet=ws)
 
@@ -109,10 +109,27 @@ class ExcelWriter():
                         max_dimension = val
                 ws.column_dimensions[get_column_letter(col)].width = max_dimension*width_exp
 
+    def apply_color_scale(self, ws_no):
+        ws = getattr(self, "ws"+str(ws_no))
+#        for nth,i in enumerate([aaa.change_month, aaa.change_week, aaa.change_day]):
+            # vv = getattr(ex, "ws{:.0f}".format(nth+2))
+        # for c in [get_column_letter(n+1) for n,j in enumerate(i.columns) if j[-4:] == "P(%)"]:
+        for c in [get_column_letter(n) for n in range(ws.min_column, ws.max_column + 1)]:
+            ws.conditional_formatting.add(
+                '{}{:.0f}:{}{:.0f}'.format(c, ws.min_row, c, ws.max_row + 1),
+                ColorScaleRule(
+                    start_type='min', start_color='F8696B',
+                    mid_type='percent', mid_color='FFEB84',
+                    end_type='max', end_color='63BE7B'
+                    )
+                )
+
+
     @staticmethod
     def get_reference(start_cell_row, start_cell_col, shape):
         row,col = shape
         ref = "{}:{}".format(get_column_letter(start_cell_col) + str(start_cell_row),
                              get_column_letter(start_cell_col+col-1) + str(start_cell_row+row))
         return ref
+
 

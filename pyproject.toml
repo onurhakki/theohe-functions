@@ -19,7 +19,8 @@ dependencies = [
   "pandas",
   "plotly",
   "requests",
-  "yfinance"
+  "yfinance",
+  "ta"
 ]
 
 
