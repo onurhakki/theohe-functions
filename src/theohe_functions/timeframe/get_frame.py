@@ -16,6 +16,7 @@ resolution_store_str = {
         "1w": "5m",  "2w": "5m",  "3w": "5m",
         "1m": "30m", "3m": "30m", "6m": "30m",
         "1y": "1h",  "2y": "1h" , "3y": "1h",
+        "5y": "2h", "10y": "1h", ######
 
 }
 
@@ -109,3 +110,13 @@ class timeFrame(callTime):
         resolution = self._select_resolution(resolution, "3y", type_)
         self.get_three_year_time()
         return self.three_year, self.now, resolution
+
+    def get_five_year_frame(self, resolution = None, type_ = 0):
+        resolution = self._select_resolution(resolution, "5y", type_)
+        self.get_five_year_time()
+        return self.five_year, self.now, resolution
+
+    def get_ten_year_frame(self, resolution = None, type_ = 0):
+        resolution = self._select_resolution(resolution, "10y", type_)
+        self.get_ten_year_time()
+        return self.ten_year, self.now, resolution

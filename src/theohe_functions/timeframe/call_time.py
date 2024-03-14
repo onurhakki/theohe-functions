@@ -84,3 +84,13 @@ class callTime():
         self.now = self.get_current_time()
         self.three_year = self.now - 60*60*24*30*12*3
         return int(self.three_year)
+
+    def get_five_year_time(self):
+        self.now = self.get_current_time()
+        self.five_year = self.now - 60*60*24*30*12*5
+        return int(self.five_year)
+
+    def get_ten_year_time(self):
+        self.now = self.get_current_time()
+        self.ten_year = self.now - 60*60*24*30*12*10
+        return int(self.ten_year)

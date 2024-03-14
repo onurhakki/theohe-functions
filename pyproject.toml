@@ -13,10 +13,13 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
+  "bs4",
   "datetime",
+  "numpy",
   "pandas",
   "plotly",
-  "requests"
+  "requests",
+  "yfinance"
 ]
 
 
