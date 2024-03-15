@@ -3,10 +3,9 @@ import requests
 import pandas as pd
 import numpy as np
 import yfinance as yf
+from ...timeframe.get_frame import timeFrame
 
-
-from datetime import datetime
-from the_ohe_stock.crypto_data.timeframes import timeFrameCrypto
+from datetime import datetime, timedelta
 
 
 def bist_kap(verify = True, to_excel=False):
@@ -56,6 +55,22 @@ def yf_data_download(tag, frame, progress=False):
         "Adj Close": "adj_close"
         })
     return result
+
+
+def yf_data_multiframe_download(columns):
+    now = datetime.now()
+    m, w, d = now.strftime("%Y-%m-01"), (now - timedelta(days = now.weekday() + 1)).strftime("%Y-%m-%d"), (now - timedelta(days=1)).strftime("%Y-%m-%d")
+
+    month_frame = timeFrame().get_three_year_frame(resolution="1mo")
+    week_frame = timeFrame().get_three_year_frame(resolution="1wk")
+    day_frame = timeFrame().get_three_year_frame(resolution="1d")
+
+    df_month = yf_data_download(columns, frame = month_frame)
+    df_week = yf_data_download(columns, frame = week_frame)
+    df_day = yf_data_download(columns, frame = day_frame)
+    return (df_month, df_week, df_day)
+
+
 
 def crypto_format(result):
     res = result.copy()
